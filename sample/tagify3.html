@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .tagify {
+        width: 100%;
+        max-width: 700px;
+      }
+    </style>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@yaireo/tagify@4.31.1/dist/tagify.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify@4.31.1/dist/tagify.min.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+      integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+  </head>
+  <body>
+    <input
+      name="input"
+      placeholder="write some tags"
+      value="css, html, javascript, css"
+      data-blacklist=".NET,PHP"
+      autofocus
+    />
+    <!-- 
+  placeholder : 입력 힌트 메세지 
+  value : 미리 값을 집어넣으면 초기 태깅이 되어있다
+  data-blacklist : 블랙리스트 : 해당 문자는 태그로 추가 불가능
+  autofocus : 자동 태그입력창으로 포커스
+  --></body>
+  <script src="./tagify3.js"></script>
+</html>

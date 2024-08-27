@@ -3,6 +3,7 @@ import { MixedTags } from "@yaireo/tagify/dist/react.tagify";
 
 const settings = {
   pattern: /@/, // <- must define "patten" in mixed mode
+  //   enforceWhitelist: true, // 화이트리스트에서 허용된 태그만 사용 // <<< 이거 하면 다 안되네..
   dropdown: {
     enabled: 1,
     position: "text",
@@ -35,8 +36,7 @@ const CustomMixedTags = () => {
         readOnly={false}
         onChange={onChange}
         value={`
-      This is a textarea which mixes text with [[{"value":"tags"}]].
-      To add a [[{"value":"tag"}]], type <em>@</em> and a (Latin) character. Here's a [[{"value":"readonly", "readonly":true}]] tag.
+      type <em>@</em> and a (Latin) character.
       <br>
       <small>(Only tags from the <em>whitelist</em> are allowed. <em>Whitelist</em> contains names of Southpark characters.)</small
       <br>
