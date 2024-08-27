@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .tagify {
+        width: 100%;
+        max-width: 700px;
+      }
+    </style>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@yaireo/tagify@4.31.1/dist/tagify.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify@4.31.1/dist/tagify.min.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+      integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+  </head>
+  <body>
+    <!-- <textarea name="mix">
+[[{"id":101, "value":"cartman", "title":"Eric Cartman"}]] and [[kyle]] do not know [[{"value":"homer simpson", "readonly":true}]] because he's a relic.
+    </textarea> -->
+
+    <input
+      name="tags"
+      class="some_class_name"
+      placeholder="write some tags"
+      value="css, html, javascript, css"
+      data-blacklist=".NET,PHP"
+    />
+  </body>
+  <script>
+    const inputElm = document.querySelector("input[name=tags]"),
+      whitelist = ["html", "css", "javascript"];
+
+    // initialize Tagify on the above input node reference
+    const tagify = new Tagify(inputElm, {
+      enforceWhitelist: true,
+
+      // make an array from the initial input value
+      whitelist: inputElm.value.trim().split(/\s*,\s*/),
+    });
+
+    // Chainable event listeners
+    tagify
+      .on("add", onAddTag)
+      .on("remove", onRemoveTag)
+      .on("input", onInput)
+      .on("edit", onTagEdit)
+      .on("invalid", onInvalidTag)
+      .on("click", onTagClick)
+      .on("focus", onTagifyFocusBlur)
+      .on("blur", onTagifyFocusBlur)
+      .on("dropdown:hide dropdown:show", (e) => console.log(e.type))
+      .on("dropdown:select", onDropdownSelect);
+
+    const mockAjax = (function mockAjax() {
+      let timeout;
+      return function (duration) {
+        clearTimeout(timeout); // abort last request
+        return new Promise(function (resolve, reject) {
+          timeout = setTimeout(resolve, duration || 700, whitelist);
+        });
+      };
+    })();
+
+    // tag added callback
+    function onAddTag(e) {
+      console.log("onAddTag: ", e.detail);
+      console.log("original input value: ", inputElm.value);
+      tagify.off("add", onAddTag); // exmaple of removing a custom Tagify event
+    }
+
+    // tag remvoed callback
+    function onRemoveTag(e) {
+      console.log(
+        "onRemoveTag:",
+        e.detail,
+        "tagify instance value:",
+        tagify.value
+      );
+    }
+
+    // on character(s) added/removed (user is typing/deleting)
+    function onInput(e) {
+      console.log("onInput: ", e.detail);
+      tagify.settings.whitelist.length = 0; // reset current whitelist
+      tagify.loading(true).dropdown.hide.call(tagify); // show the loader animation
+
+      // get new whitelist from a delayed mocked request (Promise)
+      mockAjax().then(function (result) {
+        // replace tagify "whitelist" array values with new values
+        // and add back the ones already choses as Tags
+        tagify.settings.whitelist.push(...result, ...tagify.value);
+
+        // render the suggestions dropdown.
+        tagify.loading(false).dropdown.show.call(tagify, e.detail.value);
+      });
+    }
+
+    function onTagEdit(e) {
+      console.log("onTagEdit: ", e.detail);
+    }
+
+    // invalid tag added callback
+    function onInvalidTag(e) {
+      console.log("onInvalidTag: ", e.detail);
+    }
+
+    // invalid tag added callback
+    function onTagClick(e) {
+      console.log(e.detail);
+      console.log("onTagClick: ", e.detail);
+    }
+
+    function onTagifyFocusBlur(e) {
+      console.log(e.type, "event fired");
+    }
+
+    function onDropdownSelect(e) {
+      console.log("onDropdownSelect: ", e.detail);
+    }
+  </script>
+</html>
